@@ -7,9 +7,11 @@
 
 MD_Graph::MD_Graph(const Matrix& matrix) : n(matrix.n), degrees(matrix.n, 0), edges(matrix.n), active(matrix.n, true) {
     for (std::size_t i = 0; i < matrix.n; i++) {
-        for (std::size_t j = matrix.col_ptr[i] + 1; j < matrix.col_ptr[i + 1]; j++) {
-            edges[i].insert(matrix.row_indices[j]);
-            degrees[i]++;
+        for (std::size_t j = matrix.col_ptr[i]; j < matrix.col_ptr[i + 1]; j++) {
+            if (matrix.row_indices[j] != i) {
+                edges[i].insert(matrix.row_indices[j]);
+                degrees[i]++;
+            }
         }
     }
 }
