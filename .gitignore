@@ -1,0 +1,15 @@
+# Executables
+*.exe
+*.out
+
+# Object files
+*.o
+*.obj
+
+# Build directories
+build/
+cmake-build-*/
+
+# IDE files
+.vs/
+.vscode/
