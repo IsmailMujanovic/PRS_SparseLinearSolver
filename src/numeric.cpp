@@ -40,7 +40,7 @@ NumericFactor numericFactorization(const Matrix& PAPt, const SymbolicFactorizati
         }
 
         auto pivot = w[j].real();
-        if (pivot <= 0.0) {
+        if (!std::isfinite(pivot) || pivot <= 0.0) {
             throw std::runtime_error("Matrix is not positive-definite.");
         }
 

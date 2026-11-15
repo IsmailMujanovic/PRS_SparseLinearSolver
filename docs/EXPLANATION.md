@@ -1,6 +1,6 @@
 # Sparse Cholesky pipeline: what we did, step by step
 
-Goal: solve `A x = b` for a sparse complex Hermitian positive-definite (HPD) matrix `A`, following the Heath, Ng and Peyton paper (Sections 2.2 and 2.3).
+Goal: solve `A x = b` for a sparse complex Hermitian positive-definite (HPD) matrix `A`, following the Heath, Ng and Peyton paper (Sections 2.2–2.4).
 
 The pipeline is:
 
@@ -8,7 +8,7 @@ The pipeline is:
 A --MD--> P --permute--> PAP^H --symbolic--> structure of L --numeric--> L --solve--> x
 ```
 
-Status: the code has **not been compiled or run yet**, because no C++ compiler was available in the environment where it was written. Build and run it first (see the last section).
+Status: the code compiles and has been verified end-to-end. The built-in tests print `ALL OK`; see §8 for what is checked and §9 for the build command.
 
 ---
 
@@ -19,7 +19,7 @@ The repo only had:
 - `Matrix` (`include/matrix.hpp`): CSC storage with `values` (complex), `row_indices`, `col_ptr`.
 - `MD(...)` (`src/md.cpp`): Minimum Degree ordering that returns a permutation `P`, where `P[i]` is the original vertex eliminated i-th.
 
-Missing: permuting `A`, symbolic factorization, numeric factorization and the solve.
+Missing: permuting `A`, symbolic factorization, numeric factorization and the triangular solve.
 
 ## 2. Review of the first proposed code
 
@@ -102,7 +102,13 @@ For every column `j`:
 
 Because we only touch entries that are actually nonzero in `L`, the work is proportional to the number of operations Cholesky really needs.
 
-## 7. Step 4: solve (`solve` in `src/numeric.cpp`)
+## 7. Step 4: triangular solution (`solve` in `src/numeric.cpp`)
+
+Paper Section 2.4. Once `PAP^H = L L^H` is available, solving `A x = b` reduces to two triangular systems on the permuted right-hand side:
+
+```
+L y = P b,      L^H z = y,      x = P^H z.
+```
 
 `std::vector<Complex> solve(const NumericFactor& L, const std::vector<std::size_t>& P, const std::vector<Complex>& b)`
 
@@ -110,6 +116,8 @@ Because we only touch entries that are actually nonzero in `L`, the work is prop
 2. Forward substitution `L y = P b`, column by column: divide by `diag[j]`, then subtract the column from the rows below.
 3. Backward substitution `L^H z = y`, columns from last to first: subtract `conj(l) * y[row]` for each entry of the column, then divide by `diag[j]`.
 4. Undo the permutation: `x[P[i]] = y[i]`.
+
+Both substitutions walk the CSC arrays of `L` directly, so only nonzeros of `L` are touched. The column order respects the elimination tree `T(A)` implicitly: Cholesky guarantees `parent[j] > j`, so ascending order for `L` and descending order for `L^H` are valid topological orders of the tree, and no explicit tree traversal is needed in the serial algorithm. The work is proportional to `eta(L)` nonzeros rather than the dense `n(n-1)/2`, which is why the triangular solution is usually a small fraction of the total serial time (paper Section 2.4). Parallel triangular solution (paper Section 3.5) is not implemented.
 
 ## 8. Verification (`src/main.cpp`)
 
@@ -142,6 +150,6 @@ Expected last line: `ALL OK`. If compilation or a check fails, the output will s
 | `include/md.hpp`, `src/md.cpp` | Minimum Degree ordering (diagonal bug fixed) |
 | `include/permute.hpp`, `src/permute.cpp` | Lower triangle of `P A P^H` |
 | `include/symbolic.hpp`, `src/symbolic.cpp` | Structure of `L` and elimination tree |
-| `include/numeric.hpp`, `src/numeric.cpp` | Numeric Cholesky and `solve` |
+| `include/numeric.hpp`, `src/numeric.cpp` | Numeric Cholesky and triangular solution (`solve`) |
 | `src/main.cpp` | Test inputs and verification |
 | `README.md` | Short project overview and build commands |
