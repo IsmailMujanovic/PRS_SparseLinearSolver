@@ -136,7 +136,7 @@ The program prints `ALL OK` and returns 0 if every check passes, otherwise `FAIL
 ## 9. Build and run
 
 ```
-g++ -std=c++17 -Wall -Wextra src/main.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
+g++ -std=c++17 -Wall -Wextra src/main.cpp src/validate.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
 ./program.exe
 ```
 

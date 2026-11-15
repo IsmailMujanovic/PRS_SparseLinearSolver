@@ -39,7 +39,7 @@ Ovo je još osnovna verzija, a cilj je da se kasnije proširi za efikasnije rje�
 U direktoriju projekta izvršite:
 
 ```powershell
-g++ -std=c++17 src/main.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
+g++ -std=c++17 src/main.cpp src/validate.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
 ./program.exe
 ```
 
@@ -54,7 +54,7 @@ Ako je program već kompajliran, dovoljno je pokrenuti:
 U direktoriju projekta izvršite:
 
 ```bash
-g++ -std=c++17 src/main.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program
+g++ -std=c++17 src/main.cpp src/validate.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program
 ./program
 ```
 
