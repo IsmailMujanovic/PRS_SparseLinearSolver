@@ -18,7 +18,8 @@ Ovo je još osnovna verzija, a cilj je da se kasnije proširi za efikasnije rje�
 - `include/matrix.hpp` - deklaracija strukture matrice
 - `include/md.hpp` - deklaracija grafa i MD algoritma
 - `src/matrix.cpp` - konstruktor matrice
-- `src/md.cpp` - implementacija Minimum Degree algoritma
+- `include/amd.hpp`, `src/amd.cpp` - Approximate Minimum Degree (AMD) ordering, koristi se u `main.cpp`
+- `src/md.cpp` - originalni Minimum Degree algoritam (više se ne koristi u toku rada)
 - `include/permute.hpp`, `src/permute.cpp` - permutacija matrice (donji trougao od P A P^H)
 - `include/symbolic.hpp`, `src/symbolic.cpp` - simbolička faktorizacija (struktura L i elimination tree)
 - `include/numeric.hpp`, `src/numeric.cpp` - numerička Cholesky faktorizacija (A = L L^H) i rješavanje sistema
@@ -31,7 +32,7 @@ Ovo je još osnovna verzija, a cilj je da se kasnije proširi za efikasnije rje�
 U direktoriju projekta izvršite:
 
 ```powershell
-g++ -std=c++17 src/main.cpp src/matrix.cpp src/md.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
+g++ -std=c++17 src/main.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program.exe
 ./program.exe
 ```
 
@@ -46,7 +47,7 @@ Ako je program već kompajliran, dovoljno je pokrenuti:
 U direktoriju projekta izvršite:
 
 ```bash
-g++ -std=c++17 src/main.cpp src/matrix.cpp src/md.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program
+g++ -std=c++17 src/main.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program
 ./program
 ```
 
@@ -62,7 +63,7 @@ Ako je program već kompajliran, dovoljno je pokrenuti:
 
 Program za nekoliko kompleksnih Hermitian pozitivno-definitnih matrica (mala 4x4 i dvije slučajne rijetke, n=60 i n=300) izvršava cijeli tok:
 
-1. `MD(A)` - permutacija (Minimum Degree),
+1. `AMD(A)` - permutacija (Approximate Minimum Degree),
 2. `permute(A, P)` - donji trougao od P A P^H,
 3. `symbolicFactorization(...)` - struktura L i elimination tree (marker niz, O(eta(L))),
 4. `numericFactorization(...)` - left-looking column Cholesky (cmod/cdiv) uz kompleksnu konjugaciju,

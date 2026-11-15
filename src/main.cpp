@@ -1,5 +1,5 @@
 #include "../include/matrix.hpp"
-#include "../include/md.hpp"
+#include "../include/amd.hpp"
 #include "../include/permute.hpp"
 #include "../include/symbolic.hpp"
 #include "../include/numeric.hpp"
@@ -47,7 +47,7 @@ Matrix randomHPD(std::size_t n, double density, unsigned seed) {
 
 bool check(const Matrix& A, const std::string& name) {
     auto n = A.n;
-    auto P = MD(A);
+    auto P = AMD(A);
     auto PAPt = permute(A, P);
     auto symbolic = symbolicFactorization(PAPt);
     auto L = numericFactorization(PAPt, symbolic);
