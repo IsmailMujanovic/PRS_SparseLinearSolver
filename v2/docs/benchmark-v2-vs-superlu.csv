@@ -1,0 +1,40 @@
+group,metric,unit,v2,superlu,v1,ratio_v2_over_superlu,note
+metadata,dimension,count,5000,5000,5000,,
+metadata,matrix,text,"randomHPD(5000 0.02 seed 2)",same,,,
+metadata,host_timing,text,"Apple M1 8 cores macOS 27.2 clang 21",,,,
+metadata,host_profiler,text,"AMD Family 17h Model 60h Windows 10 22H2",,,,
+metadata,compiler_flags,text,-std=c++17 -O2,,,,
+metadata,superlu_version,text,"SuperLU 7.0.1 Homebrew OpenBLAS 0.3.34",,,,
+metadata,threads,text,"single thread OPENBLAS_NUM_THREADS=1",,,,
+metadata,workload,text,"one factorization per run median of 3 to 5 runs",,,,
+time_5000x5000,ordering,ms,53,1630,,0.03,SuperLU uses get_perm_c MMD_AT_PLUS_A
+time_5000x5000,permutation,ms,17,,,,SuperLU has no separate phase
+time_5000x5000,symbolic,ms,169,1010,,0.17,SuperLU value is an estimate not a direct timer
+time_5000x5000,numeric,ms,21470,35580,,0.60,dominant phase for both
+time_5000x5000,triangular_solve,ms,70,54,,1.30,
+time_5000x5000,total,ms,22750,42030,,0.54,median of measured runs
+algorithm,n,count,5000,5000,,1.00,
+algorithm,nnz_A,nonzeros,504098,504098,,1.00,
+algorithm,nnz_one_triangle,nonzeros,10444617,10504514,,0.99,Cholesky-equivalent for SuperLU
+algorithm,fill_ratio_one_triangle,ratio,20.72,20.84,,0.99,nnz divided by nnz_A
+algorithm,nnz_L_plus_U_reported,nonzeros,,21004028,,,LU stores both triangles
+algorithm,numeric_flops,flop,1.252e11,2.526e11,,0.50,complex FMA counted as 8 real flops
+algorithm,flop_ratio_vs_cholesky,ratio,1.00,2.02,,,
+algorithm,numeric_rate,GFLOP_per_s,5.92,6.96,,0.85,
+memory,factor_storage,MiB,159.4,359.9,,0.44,v2 is nnzL times 16 plus 8n and SuperLU is for_lu
+memory,peak_rss,MiB,749,537,,1.39,includes 400 MiB dense temporary in the generator
+memory,rss_over_factor,ratio,4.70,1.49,,,
+accuracy,forward_error,absolute,6.1e-11,,,,max abs x minus x_known
+profiler,profile_duration,s,84,,3374,,same AMD host
+profiler,sampled_cycles,count,343922,,14959758,,v2 over v1 is 0.02
+profiler,sampled_instructions,count,996634,,13738873,,v2 over v1 is 0.07
+profiler,CPI,cycles_per_instruction,0.345,,1.089,,lower is better
+profiler,IPC,instructions_per_cycle,2.898,,0.918,,higher is better
+profiler,tree_set_share,percent_of_samples,0.06,,76.58,,std::_Rb_tree and std::set
+profiler,complex_op_share,percent_of_samples,0.12,,9.13,,std::complex operators
+profiler,ordering_kernel_share,percent_of_samples,0.09,,3.28,,AMD_Graph vs MD_Graph
+profiler,numeric_share,percent_of_samples,41.63,,0.47,,numericFactorization
+profiler,validate_share,percent_of_samples,56.80,,0.00,,validateHPD
+profiler,L1_dc_miss_rate,percent_of_L1_accesses,9.20,,1.95,,denominators differ between builds
+profiler,branch_mispredict_rate,percent_of_branches,0.14,,1.75,,
+profiler,store_load_conflicts,per_1000_instructions,0.07,,7.51,,
