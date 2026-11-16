@@ -302,7 +302,7 @@ std::vector<MatrixCase> buildCases(const Config& config) {
     std::vector<MatrixCase> cases;
     cases.push_back({"tridiagonal-300", tridiagonalHPD(300)});
     cases.push_back({"random-60", randomHPD(60, 0.08, 1)});
-    cases.push_back({"random-300", randomHPD(300, 0.02, 2)});
+    cases.push_back({"random-300", randomHPD(1000, 0.02, 2)});
     cases.push_back({"laplacian2d-20", complexLaplacian2D(20)});
     cases.push_back({"laplacian2d-30", complexLaplacian2D(30)});
     if (config.large) {
