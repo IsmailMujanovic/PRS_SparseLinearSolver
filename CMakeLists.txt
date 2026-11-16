@@ -9,6 +9,8 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+option(PRS_ENABLE_PROFILE "Print wall-clock timings for solver phases" OFF)
+
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     set(CMAKE_BUILD_TYPE Release CACHE STRING "" FORCE)
 endif()
@@ -26,6 +28,10 @@ target_include_directories(prs_solver PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include
 add_executable(program src/main.cpp src/validate.cpp)
 target_link_libraries(program PRIVATE prs_solver)
 
+if(PRS_ENABLE_PROFILE)
+    target_compile_definitions(program PRIVATE PRS_ENABLE_PROFILE=1)
+endif()
+
 add_executable(bench
     benchmark/bench_superlu.cpp
     benchmark/superlu_adapter.cpp)
@@ -37,6 +43,9 @@ target_link_libraries(bench PRIVATE prs_solver)
 if(MSVC)
     target_compile_options(program PRIVATE /utf-8)
     target_compile_options(bench PRIVATE /utf-8)
+else()
+    target_compile_options(prs_solver PRIVATE -fno-omit-frame-pointer)
+    target_compile_options(program PRIVATE -fno-omit-frame-pointer)
 endif()
 
 set(SUPERLU_ROOT "" CACHE PATH "SuperLU installation prefix")

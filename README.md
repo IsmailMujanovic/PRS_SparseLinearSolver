@@ -43,6 +43,15 @@ g++ -std=c++17 src/main.cpp src/validate.cpp src/matrix.cpp src/amd.cpp src/perm
 ./program.exe
 ```
 
+For AMD uProf, build a profiling binary with debug symbols, disabled inlining, and frame pointers:
+
+```powershell
+g++ -std=c++17 -O0 -g -fno-inline -fno-omit-frame-pointer -DPRS_ENABLE_PROFILE src/main.cpp src/validate.cpp src/matrix.cpp src/amd.cpp src/permute.cpp src/symbolic.cpp src/numeric.cpp -Iinclude -o program-profile.exe
+./program-profile.exe
+```
+
+In uProf, select `program-profile.exe` as the application. The `-g` flag supplies source/function symbols; `-O0 -fno-inline` keeps phase functions visible as separate call-stack entries, and `-fno-omit-frame-pointer` improves call-stack unwinding. The program also prints wall-clock times for validation, AMD ordering, permutation, symbolic factorization, numeric Cholesky factorization, and triangular solve. Profile a larger representative matrix and repeat the timed run several times; do not use the validation or error-checking output as the performance result.
+
 Ako je program već kompajliran, dovoljno je pokrenuti:
 
 ```powershell
